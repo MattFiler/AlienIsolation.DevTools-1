@@ -360,12 +360,11 @@ void Menu::DrawMenu() {
             {
                 EntityManager::jump_to_checkpoint(EntityManager::m_this, "Entry");
 
-                CATHODE::DataTypes::ShortGuid* guid_holder = new CATHODE::DataTypes::ShortGuid();
-                CATHODE::DataTypes::ShortGuid guid = *reinterpret_cast<CATHODE::DataTypes::ShortGuid*>(CATHODE::ShortGuid::ShortGuid(guid_holder, stringToConvert));
+                CATHODE::DataTypes::ShortGuid* shortguid = new CATHODE::DataTypes::ShortGuid();
+                CATHODE::ShortGuid::ShortGuid(shortguid, stringToConvert);
 
                 std::stringstream s;
-                s << std::setfill('0') << std::setw(sizeof(CATHODE::DataTypes::ShortGuid) * 2)
-                    << std::hex << guid;
+                s << std::setfill('0') << std::setw(sizeof(CATHODE::DataTypes::ShortGuid) * 2) << std::hex << *shortguid;
                 logger.AddLog(("%s = " + s.str() +"\n").c_str(), stringToConvert);
             }
 
