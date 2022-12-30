@@ -9,6 +9,7 @@
 #include "GAME_LEVEL_MANAGER.h"
 #include "GameFlow.h"
 #include "AI_BEHAVIORAL.h"
+#include "EntityManager.h"
 
 // CATHODE-specific code classes.
 #include "EntityInterface.h"
@@ -16,6 +17,7 @@
 #include "StringTable.h"
 #include "FLOAT_MODULATE_RANDOM.h"
 #include "HackingGame.h"
+#include "DEBUG_TEXT.h"
 
 // External includes.
 #include <detours.h>
@@ -176,96 +178,11 @@ BOOL APIENTRY DllMain( HMODULE /*hModule*/,
             MessageBox(NULL, L"Fatal Error - GetModuleHandle(\"d3d11\") failed: MODULE_NOT_FOUND!", L"AlienIsolation.DevTools", MB_ICONERROR);
         }
 
-        // Overwrite the game data integrity checks (the game verifies all .PKG files and MODELS_LEVEL.BIN files by comparing them against SHA1 hashes).
-		// Here we overwrite the assembly code of the checks in memory with the "NOP" (No Operation) instruction, preventing the game from comparing the hashes.
+        DEVTOOLS_DETOURS_ATTACH(DEBUG_TEXT::on_update, DEBUG_TEXT::h_on_update);
 
-        DWORD oldProtect;
-        auto offset = DEVTOOLS_RELATIVE_ADDRESS(0x005e8baf);
-        for (int i = 0; i < 25; i++) {
-            auto* patchLocation = reinterpret_cast<char*>(offset + i);
-            VirtualProtect(patchLocation, 1, PAGE_EXECUTE_READWRITE, &oldProtect);
-            memcpy_s(patchLocation, 1, "\x90", 1);
-            VirtualProtect(patchLocation, 1, oldProtect, &oldProtect);
-        }
-        offset = DEVTOOLS_RELATIVE_ADDRESS(0x003dbfb0);
-        for (int i = 0; i < 9; i++) {
-            auto* patchLocation = reinterpret_cast<char*>(offset + i);
-            VirtualProtect(patchLocation, 1, PAGE_EXECUTE_READWRITE, &oldProtect);
-            memcpy_s(patchLocation, 1, "\x90", 1);
-            VirtualProtect(patchLocation, 1, oldProtect, &oldProtect);
-        }
-
-    	// Overwrite some engine logging calls of interest.
-    	// These will have to be manually done here, unfortunately, as MSVC has optimised out every logger call so that they now all call one empty function.
-    	// This results in thousands of calls to said empty function. Hooking it crashes the game, due to the widely varying number (and type) of parameters being passed.
-
-    	// Method taken from http://kylehalladay.com/blog/2020/11/13/Hooking-By-Example.html, thanks!
-    	// Havok error logs.
-    	/*
-        hookFunctionCall(DEVTOOLS_RELATIVE_ADDRESS(0x003f8eb9), CATHODE::Logging::HavokLogger::hijackedPrint);
-    	// MusicController - MusicEvent
-       	hookFunctionCall(DEVTOOLS_RELATIVE_ADDRESS(0x002b95aa), CATHODE::Logging::MusicControllerLogger::hijackedPrint_MusicEvent);
-    	// AnimationCommandLogger - Command changes
-        hookFunctionCall(DEVTOOLS_RELATIVE_ADDRESS(0x00278e57), CATHODE::Logging::AnimationCommandLogger::hijackedPrint);
-    	// AnimationDataLogger logs.
-    	// "Attempt to load bad animation data - set: %s - label: %s\n"
-    	const int hookAddresses[7] = {
-			0x004E4661,
-    		0x004E4798,
-    		0x00579568,
-    		0x0057969C,
-    		0x00579F21,
-    		0x0057A031,
-    		// "The animation set \"%s\" does not contain animation \"%s\" - Check the script! - Carlo\n"
-    		0x004E4E9B
-    	};
-    	for (int i = 0; i <= 6; i++)
-    	{
-    		hookFunctionCall(hookAddresses[i], CATHODE::Logging::AnimationDataLogger::hijackedPrint);
-    	}
-    	
-    	// Door logs.
-    	// "only 1 animated composite can be attached to a door"
-    	hookFunctionCall(0x004D90C3, CATHODE::Logging::DoorLogger::hijackedPrint);
-    	// "Not enough streaming budget to load other side of door, opening anyway!"
-        hookFunctionCall(0x004E6B96, CATHODE::Logging::DoorLogger::hijackedPrint);
-    	// "This door has no script so cannot animate! The door must be posed manually, makesure \"detach_anim=true\" by setting \"powered_on_reset=false\""
-    	hookFunctionCall(0x004E8237, CATHODE::Logging::DoorLogger::hijackedPrint);
-    	// Animation logs.
-        // "Unable to find a valid animated model attached to the entity!"
-    	hookFunctionCall(0x004D8D11, CATHODE::Logging::AnimationLogger::hijackedPrint);
-    	// Character node logs.
-        // "Node %s not found on player character skeleton."
-    	hookFunctionCall(0x005D9C6D, CATHODE::Logging::CharacterNodeLogger::hijackedPrint);
-    	// "node [%s] not found for character [%s]"
-    	hookFunctionCall(0x004CDB5A, CATHODE::Logging::CharacterNodeLogger::hijackedPrint);
-    	// 
-    	hookFunctionCall(0x004D6C9C, CATHODE::Logging::CharacterNodeLogger::hijackedPrint);
-    	// Node logs.
-    	//
-    	// Need to make sure I am hooking this right.
-    	//hookFunctionCall(0x004D8751, CATHODE::Logging::CharacterNodeLogger::hijackedPrint);
-    	// Zone logs.
-        // "cannot assign a zone in this way!!!"
-    	hookFunctionCall(0x004E508C, CATHODE::Logging::ZoneLogger::hijackedPrint);
-        // "cannot assign a zone link in this way!!!"
-    	hookFunctionCall(0x004E756C, CATHODE::Logging::ZoneLogger::hijackedPrint);
-    	// "suspend_on_unload must be the same for both zones!!!"
-        //hookFunctionCall(0x004E78E1, CATHODE::Logging::ZoneLogger::hijackedPrint);
-    	// Speech logs.
-    	// "%s: priority = %s, timeout = %.2f"
-    	hookFunctionCall(0x006B943E, CATHODE::Logging::SpeechLogger::hijackedPrint_RequestPriority);
-    	// "Queued speech [size = %u]:"
-    	hookFunctionCall(0x006B9460, CATHODE::Logging::SpeechLogger::hijackedPrint_SpeechSize);
-        // "Playing speech:"
-        hookFunctionCall(0x006B946F, CATHODE::Logging::SpeechLogger::hijackedPrint);
-    	// "%s [%s]"
-    	hookFunctionCall(0x006B94BF, CATHODE::Logging::SpeechLogger::hijackedPrint_SpacialAudioType);
-        // "SPEECH: No valid entity connected to speechscript entity attempting to play %s. I need a valid character or sound object - see Jack if you don\'t understand.\n"
-    	hookFunctionCall(0x004AD774, CATHODE::Logging::SpeechLogger::hijackedPrint_SpeechEntity);
-        // "SPEECH: No valid entity connected to speech entity attempting to play %s.  I needa valid character or sound object - see Jack if you don\'t understand.\n"
-    	hookFunctionCall(0x004E026F, CATHODE::Logging::SpeechLogger::hijackedPrint_SpeechEntity);
-        */
+        // Attach the EntityManager hooks.
+        DEVTOOLS_DETOURS_ATTACH(EntityManager::jump_to_checkpoint, EntityManager::h_jump_to_checkpoint);
+        DEVTOOLS_DETOURS_ATTACH(EntityManager::object_name, EntityManager::h_object_name);
 
         // Attach the GAME_LEVEL_MANAGER hooks.
         DEVTOOLS_DETOURS_ATTACH(GAME_LEVEL_MANAGER::get_level_from_name, GAME_LEVEL_MANAGER::h_get_level_from_name);
@@ -310,7 +227,6 @@ BOOL APIENTRY DllMain( HMODULE /*hModule*/,
         DEVTOOLS_DETOURS_ATTACH(CATHODE::StringTable::string_from_offset, CATHODE::StringTable::h_string_from_offset);
 
         const long result = DetourTransactionCommit();
-
         if (result != NO_ERROR)
         {
             switch (result)
@@ -344,6 +260,12 @@ BOOL APIENTRY DllMain( HMODULE /*hModule*/,
     	// Detach the rendering hooks.
         DEVTOOLS_DETOURS_DETACH(d3d11CreateDeviceAndSwapChain, hD3D11CreateDeviceAndSwapChain);
         DEVTOOLS_DETOURS_DETACH(d3d11Present, hD3D11Present);
+
+        DEVTOOLS_DETOURS_DETACH(DEBUG_TEXT::on_update, DEBUG_TEXT::h_on_update);
+
+        // Detach the EntityManager hooks.
+        DEVTOOLS_DETOURS_DETACH(EntityManager::jump_to_checkpoint, EntityManager::h_jump_to_checkpoint);
+        DEVTOOLS_DETOURS_DETACH(EntityManager::object_name, EntityManager::h_object_name);
 
         // Detach the GAME_LEVEL_MANAGER hooks.
         DEVTOOLS_DETOURS_DETACH(GAME_LEVEL_MANAGER::get_level_from_name, GAME_LEVEL_MANAGER::h_get_level_from_name);

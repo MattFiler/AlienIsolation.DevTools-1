@@ -5,6 +5,7 @@
 // Game-specific code classes.
 #include "GAME_LEVEL_MANAGER.h"
 #include "AI_BEHAVIORAL.h"
+#include "EntityManager.h"
 
 // Engine-specific code classes.
 
@@ -368,6 +369,16 @@ void Menu::DrawMenu() {
                     // Inform the enum map reset code that the UI wants the map to be cleared.
                     alienIsolation_devTools_enum_doClearEnumValueMap = true;
                 }
+            }
+
+            ImGui::Separator();
+
+            static char checkpointName[128] = "";
+            ImGui::InputTextWithHint("Checkpoint name", "e.g. Entry", checkpointName, IM_ARRAYSIZE(levelName));
+
+            if (ImGui::Button("Jump to Checkpoint"))
+            {
+                EntityManager::jump_to_checkpoint(EntityManager::m_this, "Entry");
             }
 
         	if (invalidLevelError)
