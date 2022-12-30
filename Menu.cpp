@@ -358,8 +358,6 @@ void Menu::DrawMenu() {
 
             if (ImGui::Button("Convert"))
             {
-                EntityManager::jump_to_checkpoint(EntityManager::m_this, "Entry");
-
                 CATHODE::DataTypes::ShortGuid* shortguid = new CATHODE::DataTypes::ShortGuid();
                 CATHODE::ShortGuid::ShortGuid(shortguid, stringToConvert);
 
