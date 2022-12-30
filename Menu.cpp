@@ -33,16 +33,11 @@ const std::string g_modName = "Alien: Isolation DevTools";
 const std::string g_modVersion = "0.1.4 (Alpha)";
 const std::string g_modFullName = g_modName + " " + g_modVersion;
 
-//extern std::map<CATHODE::ShortGuid, bool> permittedEnumGuids;
-//extern std::map<CATHODE::ShortGuid, std::pair<CATHODE::Enum, bool>> enumOverrides;
-//extern std::map<CATHODE::ShortGuid, std::pair<CATHODE::Enum, std::string>> entityStates;
-//extern std::map<CATHODE::ShortGuid, CATHODE::Enum*> enums;
-extern std::map<int, int*> g_entityBehaviourAnimEnumValues;
-extern std::map<CATHODE::DataTypes::ShortGuid, bool> boolOverrides;
-extern bool g_shouldOverrideBehaviourAnim;
-extern bool g_GameLevelManager_levelLoadInProgress;
-extern CATHODE::DataTypes::Vector g_lightingColourOverride;
-extern bool g_shouldOverrideLightingColour;
+extern bool shouldLogFloats;
+extern bool shouldLogBools;
+extern bool shouldLogVectors;
+extern bool shouldLogStrings;
+extern bool shouldLogEnums;
 
 Menu::Menu()
 {
@@ -168,44 +163,18 @@ void Menu::DrawMenu() {
     static bool alienIsolation_devTools_enum_doClearEnumValueMap = false;
     static bool alienIsolation_devTools_enum_doReapplyEnumValueOverride = false;
 
-    union
-    {
-        unsigned long rgbVector;
-        float rgbValue;
-    } lightingColour{};
-
-    // Convert the IEE-754 floating point hex value to a regular float that we can interact with.
-    lightingColour.rgbVector = g_lightingColourOverride.v1;
-    const float rValue = lightingColour.rgbValue;
-    lightingColour.rgbVector = g_lightingColourOverride.v2;
-    const float gValue = lightingColour.rgbValue;
-    lightingColour.rgbVector = g_lightingColourOverride.v3;
-    const float bValue = lightingColour.rgbValue;
-
     // Clear the stored enum value pointers between level loads (avoids null pointer exceptions).
-    if ((g_GameLevelManager_levelLoadInProgress || alienIsolation_devTools_enum_doClearEnumValueMap) && !alienIsolation_devTools_enum_hasClearedEnumValueMap)
+    if ((alienIsolation_devTools_enum_doClearEnumValueMap) && !alienIsolation_devTools_enum_hasClearedEnumValueMap)
     {
         logger.AddLog("[Menu] Cleared behaviour anim enum map!\n");
-        g_entityBehaviourAnimEnumValues.clear();
         alienIsolation_devTools_enum_hasClearedEnumValueMap = true;
         alienIsolation_devTools_enum_doClearEnumValueMap = false;
     }
-    else if (!g_GameLevelManager_levelLoadInProgress && !alienIsolation_devTools_enum_doClearEnumValueMap && alienIsolation_devTools_enum_hasClearedEnumValueMap)
+    else if (!alienIsolation_devTools_enum_doClearEnumValueMap && alienIsolation_devTools_enum_hasClearedEnumValueMap)
     {
         logger.AddLog("[Menu] Reset enum cleared flag!\n");
         alienIsolation_devTools_enum_hasClearedEnumValueMap = false;
         //alienIsolation_devTools_enum_doReapplyEnumValueOverride = true;
-    }
-
-	// If the value has changed since the last frame, or if we are after loading a new level, re-override all entities.
-    if (alienIsolation_devTools_menu_lastBehaviourAnimTargetValue != alienIsolation_devTools_menu_behaviourAnimTargetValue || alienIsolation_devTools_enum_doReapplyEnumValueOverride)
-    {
-        alienIsolation_devTools_menu_lastBehaviourAnimTargetValue = alienIsolation_devTools_menu_behaviourAnimTargetValue;
-
-        for (const auto& [fst, snd] : g_entityBehaviourAnimEnumValues)
-        {
-            *snd = alienIsolation_devTools_menu_behaviourAnimTargetValue;
-        }
     }
 
 	if (alienIsolation_devTools_menu_showEngineLog)
@@ -257,9 +226,7 @@ void Menu::DrawMenu() {
         }
 
         ImGui::Text("Lighting Behaviour Animation: %s (%d)", behaviourAnim_enumString, alienIsolation_devTools_menu_behaviourAnimTargetValue);
-        ImGui::Text("Level load in progress: %s", g_GameLevelManager_levelLoadInProgress ? "Yes" : "No");
         ImGui::Text("Has cleared behaviour animation map: %s", alienIsolation_devTools_enum_hasClearedEnumValueMap ? "Yes" : "No");
-        ImGui::Text("Lighting RGB Colour Override: R=%.2f, G=%.2f, B=%.2f", rValue, gValue, bValue);
 
         ImGui::End();
     }
@@ -409,102 +376,11 @@ void Menu::DrawMenu() {
 
             ImGui::Separator();
 
-            ImGui::Text("Enum Global Overrides");
-
-            /*ImGui::Checkbox("Allow access to PostprocessingSettings::blend_mode?", &permittedEnumGuids[0xD11717AB]);
-            ImGui::Checkbox("Allow access to PostprocessingSettings::priority?", &permittedEnumGuids[0x19E7816E]);
-            ImGui::Checkbox("Allow access to FollowCameraModifier::modifier_type?", &permittedEnumGuids[0x6DF6A556]);
-            ImGui::Checkbox("Allow access to LightAdaptationSettings::adaptation_mechanism?", &permittedEnumGuids[0xCE00E13E]);
-            ImGui::Checkbox("Allow access to CMD_HolsterWeapon::equipment_slot?", &permittedEnumGuids[0x5068733]);
-            ImGui::Checkbox("Allow access to CameraShake::shake_type?", &permittedEnumGuids[0x251F6445]);
-            ImGui::Checkbox("Allow access to TriggerSequence::trigger_mode?", &permittedEnumGuids[0x29B2E7D]);
-            ImGui::Checkbox("Allow access to MusicTrigger::rtpc_set_return_mode?", &permittedEnumGuids[0x1AB9598A]);
-            ImGui::Checkbox("Allow access to FilterIsEnemyOfAllianceGroup::alliance_group?", &permittedEnumGuids[0xA1D92FE0]);
-            ImGui::Checkbox("Allow access to TriggerBindAllCharactersOfType::character_class?", &permittedEnumGuids[0xC878CAC6]);
-            ImGui::Checkbox("Allow access to FilterIsCharacterClassCombo::character_classes?", &permittedEnumGuids[0xAF865204]);
-            ImGui::Checkbox("Allow access to NPC_SetAlertness::AlertState?", &permittedEnumGuids[0x80451778]);*/
-
-            /*static CATHODE::ShortGuid enumGuid_alertState = 0x80451778;
-            static CATHODE::ShortGuid enumTableGuid_alertState = 0x4882B94C;
-            static std::pair<CATHODE::Enum, bool> &enumOverride_alertState = enumOverrides.find(enumGuid_alertState)->second;
-
-			ImGui::Checkbox("Override NPC_SetAlertness::AlertState?", &enumOverride_alertState.second);
-
-            // Does the user want us to override this Enum?
-            if (enumOverride_alertState.second)
-        	{
-                // If the ShortGuid doesn't match, then set it.
-                if (enumOverride_alertState.first.enum_short_guid != enumTableGuid_alertState)
-                {
-                	enumOverride_alertState.first.enum_short_guid = enumTableGuid_alertState;
-                }
-
-                ImGui::RadioButton("IGNORE_PLAYER", &enumOverride_alertState.first.enum_value_index, 0); ImGui::SameLine();
-                ImGui::RadioButton("ALERT", &enumOverride_alertState.first.enum_value_index, 1); ImGui::SameLine();
-                ImGui::RadioButton("AGGRESSIVE", &enumOverride_alertState.first.enum_value_index, 2);
-            }*/
-
-            /*static CATHODE::ShortGuid enumGuid_behaviourAnim = 0x28F2A5AE;
-            static CATHODE::ShortGuid enumTableGuid_behaviourAnim = 0xDE1AD255;
-            static std::pair<CATHODE::Enum, bool> &enumOverride_behaviourAnim = enumOverrides.find(enumGuid_behaviourAnim)->second;*/
-
-        	ImGui::Checkbox("Override FloatModulateRandom::behaviour_anim?", &g_shouldOverrideBehaviourAnim);
-
-            // Does the user want us to override this Enum?
-            if (g_shouldOverrideBehaviourAnim)
-        	{
-                /*// If the ShortGuid doesn't match, then set it.
-                if (enumOverride_behaviourAnim.first.enum_short_guid != enumTableGuid_behaviourAnim)
-                {
-                	enumOverride_behaviourAnim.first.enum_short_guid = enumTableGuid_behaviourAnim;
-                }*/
-
-                /*ImGui::RadioButton("UNIFORM", &enumOverride_behaviourAnim.first.enum_value_index, 0); ImGui::SameLine();
-                ImGui::RadioButton("PULSATE", &enumOverride_behaviourAnim.first.enum_value_index, 1); ImGui::SameLine();
-                ImGui::RadioButton("OSCILLATE", &enumOverride_behaviourAnim.first.enum_value_index, 2); ImGui::SameLine();
-                ImGui::RadioButton("FLICKER", &enumOverride_behaviourAnim.first.enum_value_index, 3); ImGui::SameLine();
-                ImGui::RadioButton("FLUCTUATE", &enumOverride_behaviourAnim.first.enum_value_index, 4); ImGui::SameLine();
-                ImGui::RadioButton("FLICKER_OFF", &enumOverride_behaviourAnim.first.enum_value_index, 5); ImGui::SameLine();
-                ImGui::RadioButton("SPARKING", &enumOverride_behaviourAnim.first.enum_value_index, 6); ImGui::SameLine();
-                ImGui::RadioButton("BLINK", &enumOverride_behaviourAnim.first.enum_value_index, 7);*/
-
-                ImGui::Text("Live override FloatModulateRandom::behaviour_anim value on all entities");
-
-        		ImGui::RadioButton("UNIFORM", &alienIsolation_devTools_menu_behaviourAnimTargetValue, 0); ImGui::SameLine();
-	            ImGui::RadioButton("PULSATE", &alienIsolation_devTools_menu_behaviourAnimTargetValue, 1); ImGui::SameLine();
-	            ImGui::RadioButton("OSCILLATE", &alienIsolation_devTools_menu_behaviourAnimTargetValue, 2); ImGui::SameLine();
-	            ImGui::RadioButton("FLICKER", &alienIsolation_devTools_menu_behaviourAnimTargetValue, 3); ImGui::SameLine();
-	            ImGui::RadioButton("FLUCTUATE", &alienIsolation_devTools_menu_behaviourAnimTargetValue, 4); ImGui::SameLine();
-	            ImGui::RadioButton("FLICKER_OFF", &alienIsolation_devTools_menu_behaviourAnimTargetValue, 5); ImGui::SameLine();
-	            ImGui::RadioButton("SPARKING", &alienIsolation_devTools_menu_behaviourAnimTargetValue, 6); ImGui::SameLine();
-	            ImGui::RadioButton("BLINK", &alienIsolation_devTools_menu_behaviourAnimTargetValue, 7);
-            }
-
-            ImGui::Checkbox("Override LightReference::colour?", &g_shouldOverrideLightingColour);
-
-            if (g_shouldOverrideLightingColour)
-            {
-                static ImVec4 colour(rValue, gValue, bValue, 1.0f);
-
-	            ImGui::ColorPicker3("LightReference::colour", reinterpret_cast<float*>(&colour), ImGuiColorEditFlags_Uint8 | ImGuiColorEditFlags_DisplayRGB);
-
-                static constexpr float sc = 1.0f / 255.0f;
-
-                lightingColour.rgbValue = colour.x / sc;
-                g_lightingColourOverride.v1 = lightingColour.rgbVector;
-                lightingColour.rgbValue = colour.y / sc;
-                g_lightingColourOverride.v2 = lightingColour.rgbVector;
-                lightingColour.rgbValue = colour.z / sc;
-                g_lightingColourOverride.v3 = lightingColour.rgbVector;
-            }
-
-            static bool& override_LightReference_IncludeInPlanarReflections = boolOverrides.find(0xB3EB5895)->second;
-
-            ImGui::Checkbox("Override LightReference::include_in_planar_reflections?", &override_LightReference_IncludeInPlanarReflections);
-
-            static bool& override_LightReference_Volume = boolOverrides.find(0xB41E5E17)->second;
-
-            ImGui::Checkbox("Override LightReference::volume?", &override_LightReference_Volume);
+            ImGui::Checkbox("Log FLOAT accessors", &shouldLogFloats);
+            ImGui::Checkbox("Log BOOL accessors", &shouldLogBools);
+            ImGui::Checkbox("Log STRING accessors", &shouldLogStrings);
+            ImGui::Checkbox("Log ENUM accessors", &shouldLogEnums);
+            ImGui::Checkbox("Log VECTOR accessors", &shouldLogVectors);
 
             ImGui::End();
         }
