@@ -32,7 +32,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>build\</OutDir>
+    <OutDir>G:\SteamLibrary\steamapps\common\Alien Isolation\</OutDir>
     <TargetExt>.asi</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -59,6 +59,7 @@
   <ItemGroup>
     <ClCompile Include="AI_BEHAVIORAL.cpp" />
     <ClCompile Include="CA.cpp" />
+    <ClCompile Include="DEBUG_TEXT.cpp" />
     <ClCompile Include="DevTools.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="EntityManager.cpp" />
@@ -92,6 +93,7 @@
     <ClInclude Include="AI_BEHAVIORAL.h" />
     <ClInclude Include="CA.h" />
     <ClInclude Include="CATHODE.h" />
+    <ClInclude Include="DEBUG_TEXT.h" />
     <ClInclude Include="DevTools.h" />
     <ClInclude Include="EntityManager.h" />
     <ClInclude Include="GameFlow.h" />

@@ -373,8 +373,13 @@ void Menu::DrawMenu() {
 
             ImGui::Separator();
 
-            if (ImGui::Button("Jump to Entry"))
+            static char checkpointName[128] = "";
+            ImGui::InputTextWithHint("Checkpoint name", "e.g. Entry", checkpointName, IM_ARRAYSIZE(levelName));
+
+            if (ImGui::Button("Jump to Checkpoint"))
+            {
                 EntityManager::jump_to_checkpoint(EntityManager::m_this, "Entry");
+            }
 
         	if (invalidLevelError)
         	{

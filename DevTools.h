@@ -4,7 +4,7 @@
 #define DEVTOOLS_DETOURS_ATTACH(original_func, detoured_func) (DetourAttach(&reinterpret_cast<PVOID&>(original_func), detoured_func))
 #define DEVTOOLS_DETOURS_DETACH(original_func, detoured_func) (DetourDetach(&reinterpret_cast<PVOID&>(original_func), detoured_func))
 
-// Calculates the relative address for the offset provided.
+// Calculates the relative address for the offset provided. Base address for A:I is 0x00400000!
 #define DEVTOOLS_RELATIVE_ADDRESS(offset) (DevTools::GameProcess::GetBaseAddress() + offset)
 
 // Declares a hook for a function which is part of a class (i.e. has a "this" pointer).

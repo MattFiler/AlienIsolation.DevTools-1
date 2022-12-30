@@ -49,6 +49,12 @@
     <Filter Include="Header Files\Game\AI">
       <UniqueIdentifier>{d70c90a5-0797-49eb-94cf-6b6dbf7af147}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Game\Entities">
+      <UniqueIdentifier>{576d3f5c-bc42-44d9-93bc-a35295e38a87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game\Entities">
+      <UniqueIdentifier>{98a48e10-261c-4f8d-b2f9-f124fa71ac47}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -141,6 +147,9 @@
     <ClCompile Include="EntityManager.cpp">
       <Filter>Source Files\Game</Filter>
     </ClCompile>
+    <ClCompile Include="DEBUG_TEXT.cpp">
+      <Filter>Source Files\Game\Entities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Scaleform.h">
@@ -226,6 +235,9 @@
     </ClInclude>
     <ClInclude Include="EntityManager.h">
       <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="DEBUG_TEXT.h">
+      <Filter>Header Files\Game\Entities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
