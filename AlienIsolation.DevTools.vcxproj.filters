@@ -49,11 +49,11 @@
     <Filter Include="Header Files\Game\AI">
       <UniqueIdentifier>{d70c90a5-0797-49eb-94cf-6b6dbf7af147}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Game\Entities">
-      <UniqueIdentifier>{576d3f5c-bc42-44d9-93bc-a35295e38a87}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Game\Entities">
+    <Filter Include="Source Files\CATHODE\Entities">
       <UniqueIdentifier>{98a48e10-261c-4f8d-b2f9-f124fa71ac47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\CATHODE\Entities">
+      <UniqueIdentifier>{576d3f5c-bc42-44d9-93bc-a35295e38a87}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -135,20 +135,20 @@
     <ClCompile Include="StringTable.cpp">
       <Filter>Source Files\CATHODE</Filter>
     </ClCompile>
-    <ClCompile Include="FLOAT_MODULATE_RANDOM.cpp">
-      <Filter>Source Files\CATHODE</Filter>
-    </ClCompile>
     <ClCompile Include="DevTools.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="AI_BEHAVIORAL.cpp">
       <Filter>Source Files\Game\AI</Filter>
     </ClCompile>
-    <ClCompile Include="EntityManager.cpp">
-      <Filter>Source Files\Game</Filter>
-    </ClCompile>
     <ClCompile Include="DEBUG_TEXT.cpp">
-      <Filter>Source Files\Game\Entities</Filter>
+      <Filter>Source Files\CATHODE\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityManager.cpp">
+      <Filter>Source Files\CATHODE</Filter>
+    </ClCompile>
+    <ClCompile Include="FLOAT_MODULATE_RANDOM.cpp">
+      <Filter>Source Files\CATHODE\Entities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -227,9 +227,6 @@
     <ClInclude Include="DevTools.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FLOAT_MODULATE_RANDOM.h">
-      <Filter>Header Files\CATHODE</Filter>
-    </ClInclude>
     <ClInclude Include="AI_BEHAVIORAL.h">
       <Filter>Header Files\Game\AI</Filter>
     </ClInclude>
@@ -237,7 +234,10 @@
       <Filter>Header Files\Game</Filter>
     </ClInclude>
     <ClInclude Include="DEBUG_TEXT.h">
-      <Filter>Header Files\Game\Entities</Filter>
+      <Filter>Header Files\CATHODE\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="FLOAT_MODULATE_RANDOM.h">
+      <Filter>Header Files\CATHODE\Entities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

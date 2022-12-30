@@ -9,9 +9,12 @@
 
 // Engine-specific code classes.
 
+#include "ShortGuid.h"
 
 #include <detours.h>
 #include <map>
+#include <sstream>
+#include <iomanip>
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -374,11 +377,29 @@ void Menu::DrawMenu() {
             ImGui::Separator();
 
             static char checkpointName[128] = "";
-            ImGui::InputTextWithHint("Checkpoint name", "e.g. Entry", checkpointName, IM_ARRAYSIZE(levelName));
+            ImGui::InputTextWithHint("Checkpoint name", "e.g. Entry", checkpointName, IM_ARRAYSIZE(checkpointName));
 
             if (ImGui::Button("Jump to Checkpoint"))
             {
                 EntityManager::jump_to_checkpoint(EntityManager::m_this, "Entry");
+            }
+
+            ImGui::Separator();
+
+            static char stringToConvert[128] = "";
+            ImGui::InputTextWithHint("String", "e.g. HelloWorld", stringToConvert, IM_ARRAYSIZE(stringToConvert));
+
+            if (ImGui::Button("Convert"))
+            {
+                EntityManager::jump_to_checkpoint(EntityManager::m_this, "Entry");
+
+                CATHODE::DataTypes::ShortGuid* guid_holder = new CATHODE::DataTypes::ShortGuid();
+                CATHODE::DataTypes::ShortGuid guid = *reinterpret_cast<CATHODE::DataTypes::ShortGuid*>(CATHODE::ShortGuid::ShortGuid(guid_holder, stringToConvert));
+
+                std::stringstream s;
+                s << std::setfill('0') << std::setw(sizeof(CATHODE::DataTypes::ShortGuid) * 2)
+                    << std::hex << guid;
+                logger.AddLog(("%s = " + s.str() +"\n").c_str(), stringToConvert);
             }
 
         	if (invalidLevelError)
