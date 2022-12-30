@@ -116,6 +116,7 @@
     <ClInclude Include="Logging.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Scaleform.h" />
+    <ClInclude Include="ShortGuidTable.h" />
     <ClInclude Include="StringTable.h" />
     <ClInclude Include="TriggerInfo.h" />
     <ClInclude Include="UI.h" />

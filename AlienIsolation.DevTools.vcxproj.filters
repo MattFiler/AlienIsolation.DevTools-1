@@ -239,6 +239,9 @@
     <ClInclude Include="FLOAT_MODULATE_RANDOM.h">
       <Filter>Header Files\CATHODE\Entities</Filter>
     </ClInclude>
+    <ClInclude Include="ShortGuidTable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
