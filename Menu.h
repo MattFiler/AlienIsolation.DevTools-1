@@ -22,5 +22,6 @@ public:
 	static void DrawMenu();
 	static void ShutdownMenu();
 	static HRESULT GetDeviceAndContextFromSwapChain(IDXGISwapChain* pSwapChain, ID3D11Device** ppDevice, ID3D11DeviceContext** ppContext);
+	static bool LoadLevel(std::string name);
 };
 

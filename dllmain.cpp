@@ -1,23 +1,10 @@
 #include "DevTools.h"
 
-#include "CA.h"
 #include "Menu.h"
-#include "Scaleform.h"
-#include "Logging.h"
 
 // Game-specific code classes.
 #include "GAME_LEVEL_MANAGER.h"
 #include "GameFlow.h"
-#include "AI_BEHAVIORAL.h"
-#include "EntityManager.h"
-
-// CATHODE-specific code classes.
-#include "EntityInterface.h"
-#include "ShortGuid.h"
-#include "StringTable.h"
-#include "FLOAT_MODULATE_RANDOM.h"
-#include "HackingGame.h"
-#include "DEBUG_TEXT.h"
 
 // External includes.
 #include <detours.h>
@@ -178,12 +165,6 @@ BOOL APIENTRY DllMain( HMODULE /*hModule*/,
             MessageBox(NULL, L"Fatal Error - GetModuleHandle(\"d3d11\") failed: MODULE_NOT_FOUND!", L"AlienIsolation.DevTools", MB_ICONERROR);
         }
 
-        DEVTOOLS_DETOURS_ATTACH(DEBUG_TEXT::on_update, DEBUG_TEXT::h_on_update);
-
-        // Attach the EntityManager hooks.
-        DEVTOOLS_DETOURS_ATTACH(EntityManager::jump_to_checkpoint, EntityManager::h_jump_to_checkpoint);
-        DEVTOOLS_DETOURS_ATTACH(EntityManager::object_name, EntityManager::h_object_name);
-
         // Attach the GAME_LEVEL_MANAGER hooks.
         DEVTOOLS_DETOURS_ATTACH(GAME_LEVEL_MANAGER::get_level_from_name, GAME_LEVEL_MANAGER::h_get_level_from_name);
         DEVTOOLS_DETOURS_ATTACH(GAME_LEVEL_MANAGER::queue_level, GAME_LEVEL_MANAGER::h_queue_level);
@@ -191,40 +172,6 @@ BOOL APIENTRY DllMain( HMODULE /*hModule*/,
 
         // Attach the GameFlow hooks.
         DEVTOOLS_DETOURS_ATTACH(GameFlow::start_gameplay, GameFlow::h_start_gameplay);
-
-        // Attach the AI_BEHAVIORAL hooks.
-        DEVTOOLS_DETOURS_ATTACH(AI_BEHAVIORAL::WithdrawalManager::request_withdraw, AI_BEHAVIORAL::WithdrawalManager::h_request_withdraw);
-        DEVTOOLS_DETOURS_ATTACH(AI_BEHAVIORAL::WithdrawalManager::set_withdraw_state, AI_BEHAVIORAL::WithdrawalManager::h_set_withdraw_state);
-
-        // Attach the HackingGame hooks (testing only).
-        DEVTOOLS_DETOURS_ATTACH(CATHODE::HackingGame::on_custom_method, CATHODE::HackingGame::h_on_custom_method);
-
-    	// Attach the Scaleform hooks.
-        //DEVTOOLS_DETOURS_ATTACH(CATHODE::Scaleform::Callback::GameMenu::LoadLevel, CATHODE::Scaleform::Callback::GameMenu::hLoadLevel);
-        //DEVTOOLS_DETOURS_ATTACH(CATHODE::Scaleform::UI::LoadLevelUnknownFunc1, CATHODE::Scaleform::UI::hLoadLevelUnknownFunc1);
-        //DEVTOOLS_DETOURS_ATTACH(CATHODE::Scaleform::UI::LoadLevelUnknownFunc2, CATHODE::Scaleform::UI::hLoadLevelUnknownFunc2);
-        //DEVTOOLS_DETOURS_ATTACH(CATHODE::Scaleform::UI::DispatchRequestToNodeHandler, CATHODE::Scaleform::UI::hDispatchRequestToNodeHandler);
-
-        // Attach the CA hooks.
-        DEVTOOLS_DETOURS_ATTACH(CATHODE::CA::FILE_HASHES::verify_integrity, CATHODE::CA::FILE_HASHES::h_verify_integrity);
-        //DEVTOOLS_DETOURS_ATTACH(CATHODE::CA::FILE_HASHES::terminate_game, CATHODE::CA::FILE_HASHES::h_terminate_game);
-        DEVTOOLS_DETOURS_ATTACH(CATHODE::CA::FILE_HASHES::sha1_portable_hash, CATHODE::CA::FILE_HASHES::h_sha1_portable_hash);
-
-        // Attach the EntityInterface hooks.
-        DEVTOOLS_DETOURS_ATTACH(CATHODE::EntityInterface::FindParameterString, CATHODE::EntityInterface::hFindParameterString);
-        DEVTOOLS_DETOURS_ATTACH(CATHODE::EntityInterface::FindParameterBool, CATHODE::EntityInterface::hFindParameterBool);
-        DEVTOOLS_DETOURS_ATTACH(CATHODE::EntityInterface::FindParameterVector, CATHODE::EntityInterface::hFindParameterVector);
-    	DEVTOOLS_DETOURS_ATTACH(CATHODE::EntityInterface::FindParameterFloat, CATHODE::EntityInterface::hFindParameterFloat);
-    	DEVTOOLS_DETOURS_ATTACH(CATHODE::EntityInterface::FindParameterEnum, CATHODE::EntityInterface::hFindParameterEnum);
-
-        // Attach the FLOAT_MODULATE_RANDOM hooks.
-        DEVTOOLS_DETOURS_ATTACH(CATHODE::FLOAT_MODULATE_RANDOM::SaveValues, CATHODE::FLOAT_MODULATE_RANDOM::hSaveValues);
-
-        // Attach the ShortGuid hooks.
-        DEVTOOLS_DETOURS_ATTACH(CATHODE::ShortGuid::ShortGuid, CATHODE::ShortGuid::hShortGuid);
-
-        // Attach the StringTable hooks.
-        DEVTOOLS_DETOURS_ATTACH(CATHODE::StringTable::string_from_offset, CATHODE::StringTable::h_string_from_offset);
 
         const long result = DetourTransactionCommit();
         if (result != NO_ERROR)
@@ -261,12 +208,6 @@ BOOL APIENTRY DllMain( HMODULE /*hModule*/,
         DEVTOOLS_DETOURS_DETACH(d3d11CreateDeviceAndSwapChain, hD3D11CreateDeviceAndSwapChain);
         DEVTOOLS_DETOURS_DETACH(d3d11Present, hD3D11Present);
 
-        DEVTOOLS_DETOURS_DETACH(DEBUG_TEXT::on_update, DEBUG_TEXT::h_on_update);
-
-        // Detach the EntityManager hooks.
-        DEVTOOLS_DETOURS_DETACH(EntityManager::jump_to_checkpoint, EntityManager::h_jump_to_checkpoint);
-        DEVTOOLS_DETOURS_DETACH(EntityManager::object_name, EntityManager::h_object_name);
-
         // Detach the GAME_LEVEL_MANAGER hooks.
         DEVTOOLS_DETOURS_DETACH(GAME_LEVEL_MANAGER::get_level_from_name, GAME_LEVEL_MANAGER::h_get_level_from_name);
         DEVTOOLS_DETOURS_DETACH(GAME_LEVEL_MANAGER::queue_level, GAME_LEVEL_MANAGER::h_queue_level);
@@ -275,40 +216,6 @@ BOOL APIENTRY DllMain( HMODULE /*hModule*/,
         // Detach the GameFlow hooks.
         DEVTOOLS_DETOURS_DETACH(GameFlow::start_gameplay, GameFlow::h_start_gameplay);
         
-        // Detach the AI_BEHAVIORAL hooks.
-        DEVTOOLS_DETOURS_DETACH(AI_BEHAVIORAL::WithdrawalManager::request_withdraw, AI_BEHAVIORAL::WithdrawalManager::h_request_withdraw);
-        DEVTOOLS_DETOURS_DETACH(AI_BEHAVIORAL::WithdrawalManager::set_withdraw_state, AI_BEHAVIORAL::WithdrawalManager::h_set_withdraw_state);
-
-        // Detach the HackingGame hooks (testing only).
-        DEVTOOLS_DETOURS_DETACH(CATHODE::HackingGame::on_custom_method, CATHODE::HackingGame::h_on_custom_method);
-
-    	// Detach the Scaleform hooks.
-        //DEVTOOLS_DETOURS_DETACH(CATHODE::Scaleform::Callback::GameMenu::LoadLevel, CATHODE::Scaleform::Callback::GameMenu::hLoadLevel);
-        //DEVTOOLS_DETOURS_DETACH(CATHODE::Scaleform::UI::LoadLevelUnknownFunc1, CATHODE::Scaleform::UI::hLoadLevelUnknownFunc1);
-        //DEVTOOLS_DETOURS_DETACH(CATHODE::Scaleform::UI::LoadLevelUnknownFunc2, CATHODE::Scaleform::UI::hLoadLevelUnknownFunc2);
-        //DEVTOOLS_DETOURS_DETACH(CATHODE::Scaleform::UI::DispatchRequestToNodeHandler, CATHODE::Scaleform::UI::hDispatchRequestToNodeHandler);
-
-        // Detach the CA hooks.
-        DEVTOOLS_DETOURS_DETACH(CATHODE::CA::FILE_HASHES::verify_integrity, CATHODE::CA::FILE_HASHES::h_verify_integrity);
-        //DEVTOOLS_DETOURS_DETACH(CATHODE::CA::FILE_HASHES::terminate_game, CATHODE::CA::FILE_HASHES::h_terminate_game);
-        DEVTOOLS_DETOURS_DETACH(CATHODE::CA::FILE_HASHES::sha1_portable_hash, CATHODE::CA::FILE_HASHES::h_sha1_portable_hash);
-
-        // Detach the EntityInterface hooks.
-        DEVTOOLS_DETOURS_DETACH(CATHODE::EntityInterface::FindParameterString, CATHODE::EntityInterface::hFindParameterString);
-        DEVTOOLS_DETOURS_DETACH(CATHODE::EntityInterface::FindParameterBool, CATHODE::EntityInterface::hFindParameterBool);
-        DEVTOOLS_DETOURS_DETACH(CATHODE::EntityInterface::FindParameterVector, CATHODE::EntityInterface::hFindParameterVector);
-        DEVTOOLS_DETOURS_DETACH(CATHODE::EntityInterface::FindParameterFloat, CATHODE::EntityInterface::hFindParameterFloat);
-        DEVTOOLS_DETOURS_DETACH(CATHODE::EntityInterface::FindParameterEnum, CATHODE::EntityInterface::hFindParameterEnum);
-
-    	// Attach the FLOAT_MODULATE_RANDOM hooks.
-        DEVTOOLS_DETOURS_DETACH(CATHODE::FLOAT_MODULATE_RANDOM::SaveValues, CATHODE::FLOAT_MODULATE_RANDOM::hSaveValues);
-       
-        // Detach the ShortGuid hooks.
-        DEVTOOLS_DETOURS_DETACH(CATHODE::ShortGuid::ShortGuid, CATHODE::ShortGuid::hShortGuid);
-        
-        // Attach the StringTable hooks.
-        DEVTOOLS_DETOURS_DETACH(CATHODE::StringTable::string_from_offset, CATHODE::StringTable::h_string_from_offset);
-
         DetourTransactionCommit();
     }
 	

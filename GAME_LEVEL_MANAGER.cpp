@@ -1,11 +1,8 @@
 #include "GAME_LEVEL_MANAGER.h"
-#include "Menu_Log.hpp"
 
 #include <stdio.h>
 
 using namespace GAME_LEVEL_MANAGER;
-
-bool g_GameLevelManager_levelLoadInProgress = false;
 
 __declspec(noinline)
 int __fastcall GAME_LEVEL_MANAGER::h_get_level_from_name(Instance* _this, void* _EDX, char* level_name)
@@ -26,6 +23,5 @@ void __fastcall GAME_LEVEL_MANAGER::h_queue_level(Instance* _this, void* _EDX, i
 __declspec(noinline)
 void __fastcall GAME_LEVEL_MANAGER::h_request_next_level(Instance* _this, void* _EDX, bool is_part_of_playlist)
 {
-	g_GameLevelManager_levelLoadInProgress = true;
 	request_next_level(_this, is_part_of_playlist);
 }
