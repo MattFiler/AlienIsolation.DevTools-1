@@ -15,6 +15,12 @@ int __fastcall GAME_LEVEL_MANAGER::h_get_level_from_name(Instance* _this, void* 
 }
 
 __declspec(noinline)
+int __fastcall GAME_LEVEL_MANAGER::h_get_current_level(Instance* _this, void* _EDX)
+{
+	return get_current_level(_this);
+}
+
+__declspec(noinline)
 void __fastcall GAME_LEVEL_MANAGER::h_queue_level(Instance* _this, void* _EDX, int level)
 {
 	queue_level(_this, level);

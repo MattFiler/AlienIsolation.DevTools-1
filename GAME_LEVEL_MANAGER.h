@@ -17,6 +17,10 @@ namespace GAME_LEVEL_MANAGER
 	typedef int(__thiscall* t_get_level_from_name)(Instance*, char*);
 	inline auto get_level_from_name = reinterpret_cast<t_get_level_from_name>(DEVTOOLS_RELATIVE_ADDRESS(0x0037b340));
 
+	int __fastcall h_get_current_level(Instance* _this, void* _EDX);
+	typedef int(__thiscall* t_get_current_level)(Instance*);
+	inline auto get_current_level = reinterpret_cast<t_get_current_level>(DEVTOOLS_RELATIVE_ADDRESS(0x00fc2ab0 - 0x00400000));
+
 	void __fastcall h_queue_level(Instance* _this, void* _EDX, int level);
 	typedef void(__thiscall* t_queue_level)(Instance*, int);
 	inline auto queue_level = reinterpret_cast<t_queue_level>(DEVTOOLS_RELATIVE_ADDRESS(0x0037b320));

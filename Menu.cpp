@@ -49,10 +49,10 @@ LRESULT CALLBACK Menu::WndProcHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 
     if (uMsg == WM_KEYUP) {
         if (wParam == VK_DELETE) {
-            g_showMenu = !g_showMenu;
+            //g_showMenu = !g_showMenu;
         }
         if (wParam == VK_INSERT) {
-            LoadLevel("BSP_LV426_PT02");
+            LoadLevel(GAME_LEVEL_MANAGER::get_current_level(GAME_LEVEL_MANAGER::m_instance));
         }
     }
 
@@ -164,9 +164,11 @@ void Menu::DrawMenu() {
 bool Menu::LoadLevel(std::string name) {
     std::string levelToLoad = "Production\\" + name;
     const int level = GAME_LEVEL_MANAGER::get_level_from_name(GAME_LEVEL_MANAGER::m_instance, const_cast<char*>(levelToLoad.c_str()));
-    if (level == 0) return false;
-
-    GAME_LEVEL_MANAGER::queue_level(GAME_LEVEL_MANAGER::m_instance, level);
+    return LoadLevel(level);
+}
+bool Menu::LoadLevel(int id) {
+    if (id == 0) return false;
+    GAME_LEVEL_MANAGER::queue_level(GAME_LEVEL_MANAGER::m_instance, id);
     GAME_LEVEL_MANAGER::request_next_level(GAME_LEVEL_MANAGER::m_instance, false);
     return true;
 }
