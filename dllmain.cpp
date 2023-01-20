@@ -5,6 +5,7 @@
 // Game-specific code classes.
 #include "GAME_LEVEL_MANAGER.h"
 #include "GameFlow.h"
+#include "UI_LAYERMANAGER.h"
 
 // External includes.
 #include <detours.h>
@@ -173,6 +174,10 @@ BOOL APIENTRY DllMain( HMODULE /*hModule*/,
         // Attach the GameFlow hooks.
         DEVTOOLS_DETOURS_ATTACH(GameFlow::start_gameplay, GameFlow::h_start_gameplay);
 
+        DEVTOOLS_DETOURS_ATTACH(UI_LAYERMANAGER::CreateLayer_SPLASH_SCREEN, UI_LAYERMANAGER::h_CreateLayer_SPLASH_SCREEN);
+        DEVTOOLS_DETOURS_ATTACH(UI_LAYERMANAGER::CreateLayer_TRIGGERABLE_DEBUG_TEXT, UI_LAYERMANAGER::h_CreateLayer_TRIGGERABLE_DEBUG_TEXT);
+        DEVTOOLS_DETOURS_ATTACH(UI_LAYERMANAGER::CreateLayer_TRIGGERABLE_DEBUG_TEXT_STACK, UI_LAYERMANAGER::h_CreateLayer_TRIGGERABLE_DEBUG_TEXT_STACK);
+
         const long result = DetourTransactionCommit();
         if (result != NO_ERROR)
         {
@@ -215,6 +220,10 @@ BOOL APIENTRY DllMain( HMODULE /*hModule*/,
 
         // Detach the GameFlow hooks.
         DEVTOOLS_DETOURS_DETACH(GameFlow::start_gameplay, GameFlow::h_start_gameplay);
+
+        DEVTOOLS_DETOURS_DETACH(UI_LAYERMANAGER::CreateLayer_SPLASH_SCREEN, UI_LAYERMANAGER::h_CreateLayer_SPLASH_SCREEN);
+        DEVTOOLS_DETOURS_DETACH(UI_LAYERMANAGER::CreateLayer_TRIGGERABLE_DEBUG_TEXT, UI_LAYERMANAGER::h_CreateLayer_TRIGGERABLE_DEBUG_TEXT);
+        DEVTOOLS_DETOURS_DETACH(UI_LAYERMANAGER::CreateLayer_TRIGGERABLE_DEBUG_TEXT_STACK, UI_LAYERMANAGER::h_CreateLayer_TRIGGERABLE_DEBUG_TEXT_STACK);
         
         DetourTransactionCommit();
     }
