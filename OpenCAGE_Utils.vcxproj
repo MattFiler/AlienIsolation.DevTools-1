@@ -58,6 +58,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DebugText.cpp" />
+    <ClCompile Include="DebugTextStacking.cpp" />
     <ClCompile Include="DevTools.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="GameFlow.cpp" />
@@ -79,6 +81,8 @@
     <ClCompile Include="Menu.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DebugText.h" />
+    <ClInclude Include="DebugTextStacking.h" />
     <ClInclude Include="DevTools.h" />
     <ClInclude Include="GameFlow.h" />
     <ClInclude Include="GAME_LEVEL_MANAGER.h" />

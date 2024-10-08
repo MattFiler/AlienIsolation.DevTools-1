@@ -5,6 +5,8 @@
 // Game-specific code classes.
 #include "GAME_LEVEL_MANAGER.h"
 #include "GameFlow.h"
+#include "DebugText.h"
+#include "DebugTextStacking.h"
 
 // External includes.
 #include <detours.h>
@@ -173,6 +175,10 @@ BOOL APIENTRY DllMain( HMODULE /*hModule*/,
         // Attach the GameFlow hooks.
         DEVTOOLS_DETOURS_ATTACH(GameFlow::start_gameplay, GameFlow::h_start_gameplay);
 
+        // Attach the DebugText hooks.
+        DEVTOOLS_DETOURS_ATTACH(DebugText::on_custom_method, DebugText::h_on_custom_method);
+        DEVTOOLS_DETOURS_ATTACH(DebugTextStacking::on_custom_method, DebugTextStacking::h_on_custom_method);
+
         const long result = DetourTransactionCommit();
         if (result != NO_ERROR)
         {
@@ -215,6 +221,10 @@ BOOL APIENTRY DllMain( HMODULE /*hModule*/,
 
         // Detach the GameFlow hooks.
         DEVTOOLS_DETOURS_DETACH(GameFlow::start_gameplay, GameFlow::h_start_gameplay);
+
+        // Detach the DebugText hooks.
+        DEVTOOLS_DETOURS_DETACH(DebugText::on_custom_method, DebugText::h_on_custom_method);
+        DEVTOOLS_DETOURS_DETACH(DebugTextStacking::on_custom_method, DebugTextStacking::h_on_custom_method);
         
         DetourTransactionCommit();
     }
