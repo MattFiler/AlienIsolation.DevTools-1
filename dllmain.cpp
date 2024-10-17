@@ -63,8 +63,9 @@ BOOL APIENTRY DllMain(HMODULE /*hModule*/, DWORD  ul_reason_for_call, LPVOID /*l
             DEVTOOLS_DETOURS_ATTACH(UI_LAYERMANAGER::CreateLayer_TRIGGERABLE_DEBUG_TEXT, UI_LAYERMANAGER::h_CreateLayer_TRIGGERABLE_DEBUG_TEXT);
             DEVTOOLS_DETOURS_ATTACH(UI_LAYERMANAGER::CreateLayer_TRIGGERABLE_DEBUG_TEXT_STACK, UI_LAYERMANAGER::h_CreateLayer_TRIGGERABLE_DEBUG_TEXT_STACK);
 
-        DEVTOOLS_DETOURS_ATTACH(DebugText::on_custom_method, DebugText::h_on_custom_method);
-        DEVTOOLS_DETOURS_ATTACH(DebugTextStacking::on_custom_method, DebugTextStacking::h_on_custom_method);
+            DEVTOOLS_DETOURS_ATTACH(DebugText::on_custom_method, DebugText::h_on_custom_method);
+            DEVTOOLS_DETOURS_ATTACH(DebugText::on_start, DebugText::h_on_start);
+            DEVTOOLS_DETOURS_ATTACH(DebugTextStacking::on_custom_method, DebugTextStacking::h_on_custom_method);
 
             DetourTransactionCommit();
             break;
@@ -83,10 +84,11 @@ BOOL APIENTRY DllMain(HMODULE /*hModule*/, DWORD  ul_reason_for_call, LPVOID /*l
             DEVTOOLS_DETOURS_DETACH(UI_LAYERMANAGER::CreateLayer_TRIGGERABLE_DEBUG_TEXT, UI_LAYERMANAGER::h_CreateLayer_TRIGGERABLE_DEBUG_TEXT);
             DEVTOOLS_DETOURS_DETACH(UI_LAYERMANAGER::CreateLayer_TRIGGERABLE_DEBUG_TEXT_STACK, UI_LAYERMANAGER::h_CreateLayer_TRIGGERABLE_DEBUG_TEXT_STACK);
 
-        DEVTOOLS_DETOURS_DETACH(DebugText::on_custom_method, DebugText::h_on_custom_method);
-        DEVTOOLS_DETOURS_DETACH(DebugTextStacking::on_custom_method, DebugTextStacking::h_on_custom_method);
+            DEVTOOLS_DETOURS_DETACH(DebugText::on_custom_method, DebugText::h_on_custom_method);
+            DEVTOOLS_DETOURS_DETACH(DebugText::on_start, DebugText::h_on_start);
+            DEVTOOLS_DETOURS_DETACH(DebugTextStacking::on_custom_method, DebugTextStacking::h_on_custom_method);
         
-        DetourTransactionCommit();
+            DetourTransactionCommit();
             break;
     }
 	
