@@ -12,6 +12,10 @@ namespace DebugText
 	typedef int(__thiscall* t_get_alignment)(void* _this, int* param_1, int* param_2);
 	inline auto get_alignment = reinterpret_cast<t_get_alignment>(DEVTOOLS_RELATIVE_ADDRESS(0x008eae70 - 0x00400000));
 
+	int __fastcall h_create(void* _this, void* _EDX, int* param_1, int* param_2);
+	typedef int(__thiscall* t_create)(void* _this, int* param_1, int* param_2);
+	inline auto create = reinterpret_cast<t_create>(DEVTOOLS_RELATIVE_ADDRESS(0x005c1730 - 0x00400000));
+
 
 
 	//These are methods in DEBUG_TEXT rather than DebugText
