@@ -8,6 +8,8 @@
 #include <Windows.h>
 #include <detours.h>
 #include <string>
+#include <iostream>
+#include <fstream>
 
 bool LoadLevel(int id) {
     if (id == 0) return false;
@@ -21,6 +23,18 @@ bool LoadLevel(std::string name) {
     return LoadLevel(level);
 }
 
+void RedirectIOToConsole()
+{
+    AllocConsole();
+
+    FILE* fp;
+    freopen_s(&fp, "CONOUT$", "w", stdout);
+    freopen_s(&fp, "CONIN$", "r", stdin);
+    freopen_s(&fp, "CONOUT$", "w", stderr);
+
+    std::ios::sync_with_stdio();
+}
+
 BOOL APIENTRY DllMain(HMODULE /*hModule*/, DWORD  ul_reason_for_call, LPVOID /*lpReserved*/)
 {
     if (DetourIsHelperProcess())
@@ -28,40 +42,44 @@ BOOL APIENTRY DllMain(HMODULE /*hModule*/, DWORD  ul_reason_for_call, LPVOID /*l
         return TRUE;
     }
 
-    if (ul_reason_for_call == DLL_PROCESS_ATTACH)
+    switch (ul_reason_for_call)
     {
-        DetourRestoreAfterWith();
-        DetourTransactionBegin();
-        DetourUpdateThread(GetCurrentThread());
+        case DLL_PROCESS_ATTACH:
+            RedirectIOToConsole();
 
-        DEVTOOLS_DETOURS_ATTACH(GAME_LEVEL_MANAGER::get_level_from_name, GAME_LEVEL_MANAGER::h_get_level_from_name);
-        DEVTOOLS_DETOURS_ATTACH(GAME_LEVEL_MANAGER::queue_level, GAME_LEVEL_MANAGER::h_queue_level);
-        DEVTOOLS_DETOURS_ATTACH(GAME_LEVEL_MANAGER::request_next_level, GAME_LEVEL_MANAGER::h_request_next_level);
+            DetourRestoreAfterWith();
+            DetourTransactionBegin();
+            DetourUpdateThread(GetCurrentThread());
 
-        DEVTOOLS_DETOURS_ATTACH(GameFlow::start_gameplay, GameFlow::h_start_gameplay);
+            DEVTOOLS_DETOURS_ATTACH(GAME_LEVEL_MANAGER::get_level_from_name, GAME_LEVEL_MANAGER::h_get_level_from_name);
+            DEVTOOLS_DETOURS_ATTACH(GAME_LEVEL_MANAGER::queue_level, GAME_LEVEL_MANAGER::h_queue_level);
+            DEVTOOLS_DETOURS_ATTACH(GAME_LEVEL_MANAGER::request_next_level, GAME_LEVEL_MANAGER::h_request_next_level);
 
-        DEVTOOLS_DETOURS_ATTACH(UI_LAYERMANAGER::GetLayer, UI_LAYERMANAGER::h_GetLayer);
-        DEVTOOLS_DETOURS_ATTACH(UI_LAYERMANAGER::CreateLayer_TRIGGERABLE_DEBUG_TEXT, UI_LAYERMANAGER::h_CreateLayer_TRIGGERABLE_DEBUG_TEXT);
-        DEVTOOLS_DETOURS_ATTACH(UI_LAYERMANAGER::CreateLayer_TRIGGERABLE_DEBUG_TEXT_STACK, UI_LAYERMANAGER::h_CreateLayer_TRIGGERABLE_DEBUG_TEXT_STACK);
+            DEVTOOLS_DETOURS_ATTACH(GameFlow::start_gameplay, GameFlow::h_start_gameplay);
 
-        const long result = DetourTransactionCommit();
-    }
-    else if (ul_reason_for_call == DLL_PROCESS_DETACH)
-    {
-        DetourTransactionBegin();
-        DetourUpdateThread(GetCurrentThread());
+            DEVTOOLS_DETOURS_ATTACH(UI_LAYERMANAGER::GetLayer, UI_LAYERMANAGER::h_GetLayer);
+            DEVTOOLS_DETOURS_ATTACH(UI_LAYERMANAGER::CreateLayer_TRIGGERABLE_DEBUG_TEXT, UI_LAYERMANAGER::h_CreateLayer_TRIGGERABLE_DEBUG_TEXT);
+            DEVTOOLS_DETOURS_ATTACH(UI_LAYERMANAGER::CreateLayer_TRIGGERABLE_DEBUG_TEXT_STACK, UI_LAYERMANAGER::h_CreateLayer_TRIGGERABLE_DEBUG_TEXT_STACK);
 
-        DEVTOOLS_DETOURS_DETACH(GAME_LEVEL_MANAGER::get_level_from_name, GAME_LEVEL_MANAGER::h_get_level_from_name);
-        DEVTOOLS_DETOURS_DETACH(GAME_LEVEL_MANAGER::queue_level, GAME_LEVEL_MANAGER::h_queue_level);
-        DEVTOOLS_DETOURS_DETACH(GAME_LEVEL_MANAGER::request_next_level, GAME_LEVEL_MANAGER::h_request_next_level);
+            DetourTransactionCommit();
+            break;
 
-        DEVTOOLS_DETOURS_DETACH(GameFlow::start_gameplay, GameFlow::h_start_gameplay);
+        case DLL_PROCESS_DETACH:
+            DetourTransactionBegin();
+            DetourUpdateThread(GetCurrentThread());
 
-        DEVTOOLS_DETOURS_DETACH(UI_LAYERMANAGER::GetLayer, UI_LAYERMANAGER::h_GetLayer);
-        DEVTOOLS_DETOURS_DETACH(UI_LAYERMANAGER::CreateLayer_TRIGGERABLE_DEBUG_TEXT, UI_LAYERMANAGER::h_CreateLayer_TRIGGERABLE_DEBUG_TEXT);
-        DEVTOOLS_DETOURS_DETACH(UI_LAYERMANAGER::CreateLayer_TRIGGERABLE_DEBUG_TEXT_STACK, UI_LAYERMANAGER::h_CreateLayer_TRIGGERABLE_DEBUG_TEXT_STACK);
-        
-        DetourTransactionCommit();
+            DEVTOOLS_DETOURS_DETACH(GAME_LEVEL_MANAGER::get_level_from_name, GAME_LEVEL_MANAGER::h_get_level_from_name);
+            DEVTOOLS_DETOURS_DETACH(GAME_LEVEL_MANAGER::queue_level, GAME_LEVEL_MANAGER::h_queue_level);
+            DEVTOOLS_DETOURS_DETACH(GAME_LEVEL_MANAGER::request_next_level, GAME_LEVEL_MANAGER::h_request_next_level);
+
+            DEVTOOLS_DETOURS_DETACH(GameFlow::start_gameplay, GameFlow::h_start_gameplay);
+
+            DEVTOOLS_DETOURS_DETACH(UI_LAYERMANAGER::GetLayer, UI_LAYERMANAGER::h_GetLayer);
+            DEVTOOLS_DETOURS_DETACH(UI_LAYERMANAGER::CreateLayer_TRIGGERABLE_DEBUG_TEXT, UI_LAYERMANAGER::h_CreateLayer_TRIGGERABLE_DEBUG_TEXT);
+            DEVTOOLS_DETOURS_DETACH(UI_LAYERMANAGER::CreateLayer_TRIGGERABLE_DEBUG_TEXT_STACK, UI_LAYERMANAGER::h_CreateLayer_TRIGGERABLE_DEBUG_TEXT_STACK);
+
+            DetourTransactionCommit();
+            break;
     }
 	
     return TRUE;
