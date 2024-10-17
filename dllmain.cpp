@@ -7,6 +7,7 @@
 #include "DebugTextStacking.h"
 #include "DebugEnvironmentMarker.h"
 #include "EntityInterface.h"
+#include "cUI.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -75,6 +76,8 @@ BOOL APIENTRY DllMain(HMODULE /*hModule*/, DWORD  ul_reason_for_call, LPVOID /*l
 
             DEVTOOLS_DETOURS_ATTACH(EntityInterface::find_parameter, EntityInterface::h_find_parameter);
 
+            DEVTOOLS_DETOURS_ATTACH(cUI::OpenScene, cUI::h_OpenScene);
+
             DetourTransactionCommit();
             break;
 
@@ -101,6 +104,8 @@ BOOL APIENTRY DllMain(HMODULE /*hModule*/, DWORD  ul_reason_for_call, LPVOID /*l
             DEVTOOLS_DETOURS_DETACH(DebugTextStacking::on_custom_method, DebugTextStacking::h_on_custom_method);
 
             DEVTOOLS_DETOURS_DETACH(EntityInterface::find_parameter, EntityInterface::h_find_parameter);
+
+            DEVTOOLS_DETOURS_DETACH(cUI::OpenScene, cUI::h_OpenScene);
         
             DetourTransactionCommit();
             break;
