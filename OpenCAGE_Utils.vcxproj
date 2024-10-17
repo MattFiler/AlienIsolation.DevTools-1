@@ -62,6 +62,7 @@
     <ClCompile Include="DebugTextStacking.cpp" />
     <ClCompile Include="DevTools.cpp" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="EntityInterface.cpp" />
     <ClCompile Include="GameFlow.cpp" />
     <ClCompile Include="GAME_LEVEL_MANAGER.cpp" />
     <ClCompile Include="libs\detours\src\creatwth.cpp" />
@@ -74,9 +75,11 @@
     <ClCompile Include="UI_LAYERMANAGER.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Datatypes.h" />
     <ClInclude Include="DebugText.h" />
     <ClInclude Include="DebugTextStacking.h" />
     <ClInclude Include="DevTools.h" />
+    <ClInclude Include="EntityInterface.h" />
     <ClInclude Include="GameFlow.h" />
     <ClInclude Include="GAME_LEVEL_MANAGER.h" />
     <ClInclude Include="libs\detours\src\detours.h" />

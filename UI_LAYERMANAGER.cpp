@@ -30,5 +30,8 @@ void __fastcall UI_LAYERMANAGER::h_CreateLayer_TRIGGERABLE_DEBUG_TEXT_STACK(void
 __declspec(noinline)
 void* __fastcall UI_LAYERMANAGER::h_GetLayer(void* _this, void* _EDX, const char* layer_name)
 {
+	if (layer_name == "debug_text" || layer_name == "debug_text_stack") {
+		std::cout << "GetLayer: " << layer_name << "\n";
+	}
 	return GetLayer(_this, layer_name);
 }
