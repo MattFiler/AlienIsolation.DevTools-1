@@ -58,6 +58,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DebugEnvironmentMarker.cpp" />
     <ClCompile Include="DebugText.cpp" />
     <ClCompile Include="DebugTextStacking.cpp" />
     <ClCompile Include="DevTools.cpp" />
@@ -76,6 +77,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Datatypes.h" />
+    <ClInclude Include="DebugEnvironmentMarker.h" />
     <ClInclude Include="DebugText.h" />
     <ClInclude Include="DebugTextStacking.h" />
     <ClInclude Include="DevTools.h" />

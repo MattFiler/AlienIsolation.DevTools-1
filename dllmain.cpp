@@ -5,6 +5,7 @@
 #include "UI_LAYERMANAGER.h"
 #include "DebugText.h"
 #include "DebugTextStacking.h"
+#include "DebugEnvironmentMarker.h"
 #include "EntityInterface.h"
 
 #define WIN32_LEAN_AND_MEAN
@@ -67,6 +68,9 @@ BOOL APIENTRY DllMain(HMODULE /*hModule*/, DWORD  ul_reason_for_call, LPVOID /*l
             DEVTOOLS_DETOURS_ATTACH(DebugText::on_custom_method, DebugText::h_on_custom_method);
             DEVTOOLS_DETOURS_ATTACH(DebugText::on_start, DebugText::h_on_start);
             DEVTOOLS_DETOURS_ATTACH(DebugText::get_alignment, DebugText::h_get_alignment);
+
+            DEVTOOLS_DETOURS_ATTACH(DebugEnvironmentMarker::on_update, DebugEnvironmentMarker::h_on_update);
+
             DEVTOOLS_DETOURS_ATTACH(DebugTextStacking::on_custom_method, DebugTextStacking::h_on_custom_method);
 
             DEVTOOLS_DETOURS_ATTACH(EntityInterface::find_parameter, EntityInterface::h_find_parameter);
@@ -91,6 +95,9 @@ BOOL APIENTRY DllMain(HMODULE /*hModule*/, DWORD  ul_reason_for_call, LPVOID /*l
             DEVTOOLS_DETOURS_DETACH(DebugText::on_custom_method, DebugText::h_on_custom_method);
             DEVTOOLS_DETOURS_DETACH(DebugText::on_start, DebugText::h_on_start);
             DEVTOOLS_DETOURS_DETACH(DebugText::get_alignment, DebugText::h_get_alignment);
+
+            DEVTOOLS_DETOURS_DETACH(DebugEnvironmentMarker::on_update, DebugEnvironmentMarker::h_on_update);
+
             DEVTOOLS_DETOURS_DETACH(DebugTextStacking::on_custom_method, DebugTextStacking::h_on_custom_method);
 
             DEVTOOLS_DETOURS_DETACH(EntityInterface::find_parameter, EntityInterface::h_find_parameter);
