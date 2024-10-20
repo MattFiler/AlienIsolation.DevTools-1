@@ -24,7 +24,7 @@ int __fastcall DebugText::h_get_alignment(void* _this, void* _EDX, int* param_1,
 void __cdecl DebugText::h_create(DataTypes::EntityInfo* param_1, int** param_2)
 {
 	create(param_1, param_2);
-	std::cout << "DebugText create = " << param_1->val1 << " " << param_1->val2 << "\n";
+	std::cout << "DebugText create = " << param_1->val1 << " " << param_1->composite_instance_id << " " << param_2 << "\n";
 	
 	//int v;
 	//std::cin >> v;

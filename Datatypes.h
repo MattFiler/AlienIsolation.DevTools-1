@@ -34,7 +34,7 @@ namespace DataTypes
 	struct EntityInfo
 	{
 		ShortGuid val1;
-		ShortGuid val2;
+		ShortGuid composite_instance_id;
 	};
 
 	/**
