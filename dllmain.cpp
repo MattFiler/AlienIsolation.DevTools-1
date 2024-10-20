@@ -8,6 +8,7 @@
 #include "DebugEnvironmentMarker.h"
 #include "EntityInterface.h"
 #include "cUI.h"
+#include "EntityManager.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -66,6 +67,8 @@ BOOL APIENTRY DllMain(HMODULE /*hModule*/, DWORD  ul_reason_for_call, LPVOID /*l
             DEVTOOLS_DETOURS_ATTACH(UI_LAYERMANAGER::CreateLayer_TRIGGERABLE_DEBUG_TEXT, UI_LAYERMANAGER::h_CreateLayer_TRIGGERABLE_DEBUG_TEXT);
             DEVTOOLS_DETOURS_ATTACH(UI_LAYERMANAGER::CreateLayer_TRIGGERABLE_DEBUG_TEXT_STACK, UI_LAYERMANAGER::h_CreateLayer_TRIGGERABLE_DEBUG_TEXT_STACK);
 
+            DEVTOOLS_DETOURS_ATTACH(EntityManager::call_entity_method, EntityManager::h_call_entity_method);
+
             DEVTOOLS_DETOURS_ATTACH(DebugText::create, DebugText::h_create);
             DEVTOOLS_DETOURS_ATTACH(DebugText::update, DebugText::h_update);
             DEVTOOLS_DETOURS_ATTACH(DebugText::on_custom_method, DebugText::h_on_custom_method);
@@ -97,6 +100,8 @@ BOOL APIENTRY DllMain(HMODULE /*hModule*/, DWORD  ul_reason_for_call, LPVOID /*l
             DEVTOOLS_DETOURS_DETACH(UI_LAYERMANAGER::GetLayer, UI_LAYERMANAGER::h_GetLayer);
             DEVTOOLS_DETOURS_DETACH(UI_LAYERMANAGER::CreateLayer_TRIGGERABLE_DEBUG_TEXT, UI_LAYERMANAGER::h_CreateLayer_TRIGGERABLE_DEBUG_TEXT);
             DEVTOOLS_DETOURS_DETACH(UI_LAYERMANAGER::CreateLayer_TRIGGERABLE_DEBUG_TEXT_STACK, UI_LAYERMANAGER::h_CreateLayer_TRIGGERABLE_DEBUG_TEXT_STACK);
+
+            DEVTOOLS_DETOURS_DETACH(EntityManager::call_entity_method, EntityManager::h_call_entity_method);
 
             DEVTOOLS_DETOURS_DETACH(DebugText::create, DebugText::h_create);
             DEVTOOLS_DETOURS_DETACH(DebugText::update, DebugText::h_update);
