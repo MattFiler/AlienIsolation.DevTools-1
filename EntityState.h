@@ -69,6 +69,6 @@ namespace EntityState
 	void  __fastcall h_state_change(void* _this, void* _EDX, int* param_1, int param_2, unsigned int param_3, bool param_4)
 	{
 		state_change(_this, param_1, param_2, param_3, param_4);
-		std::cout << "state_change " << param_1 << " " << param_2 << " " << entityStateIDToString((EntityStateID)param_3) << " " << param_4 << "" << "\n";
+		//std::cout << "state_change " << param_1 << " " << param_2 << " " << entityStateIDToString((EntityStateID)param_3) << " " << param_4 << "" << "\n";
 	}
 }

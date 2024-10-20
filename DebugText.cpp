@@ -21,11 +21,13 @@ int __fastcall DebugText::h_get_alignment(void* _this, void* _EDX, int* param_1,
 	return get_alignment(_this, param_1, param_2);
 }
 
-int** __cdecl DebugText::h_create(int** param_1, int** param_2)
+void __cdecl DebugText::h_create(DataTypes::EntityInfo* param_1, int** param_2)
 {
-	int** ptr = create(param_1, param_2);
-	std::cout << "DebugText create = " << ptr << "\n";
-	return ptr;
+	create(param_1, param_2);
+	std::cout << "DebugText create = " << param_1->val1 << " " << param_1->val2 << "\n";
+	
+	//int v;
+	//std::cin >> v;
 }
 
 int __fastcall DebugText::h_update(void* _this, void* _EDX, void* param_2, int param_3)

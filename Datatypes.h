@@ -31,6 +31,12 @@ namespace DataTypes
 		int enum_value_index = 0;
 	};
 
+	struct EntityInfo
+	{
+		ShortGuid val1;
+		ShortGuid val2;
+	};
+
 	/**
 	* \brief Holds three unsigned longs (DWORDs), typically used for colours or positions.
 	*/
