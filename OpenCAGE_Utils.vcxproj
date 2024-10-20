@@ -74,6 +74,7 @@
     <ClCompile Include="libs\detours\src\disolx86.cpp" />
     <ClCompile Include="libs\detours\src\image.cpp" />
     <ClCompile Include="libs\detours\src\modules.cpp" />
+    <ClCompile Include="ShortGuid.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cUI.h" />
@@ -83,10 +84,13 @@
     <ClInclude Include="DebugTextStacking.h" />
     <ClInclude Include="DevTools.h" />
     <ClInclude Include="EntityInterface.h" />
+    <ClInclude Include="EntityManager.h" />
     <ClInclude Include="GameFlow.h" />
     <ClInclude Include="GAME_LEVEL_MANAGER.h" />
     <ClInclude Include="libs\detours\src\detours.h" />
     <ClInclude Include="libs\detours\src\detver.h" />
+    <ClInclude Include="ShortGuid.h" />
+    <ClInclude Include="ShortGuidTable.h" />
     <ClInclude Include="UI_LAYERMANAGER.h" />
   </ItemGroup>
   <ItemGroup>
