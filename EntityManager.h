@@ -14,6 +14,8 @@ namespace EntityManager
 		std::string str = ShortGuidTable::Get(*param_1);
 		int val = call_entity_method(_this, param_1, param_2, param_3, param_4);
 
+		//param_2 gets set in call_entity_method
+
 		std::cout << "call_entity_method " << val << " " << str << " " << param_2 << " " << param_3 << " " << param_4 << "\n";
 
 		return val;
