@@ -16,6 +16,10 @@ namespace DebugText
 	typedef int** (__cdecl* t_create)(int** param_1, int** param_2);
 	inline auto create = reinterpret_cast<t_create>(DEVTOOLS_RELATIVE_ADDRESS(0x005c18b0 - 0x00400000));
 
+	int __fastcall h_update(void* _this, void* _EDX, void* param_2, int param_3);
+	typedef int (__thiscall* t_update)(void* _this, void* param_2, int param_3);
+	inline auto update = reinterpret_cast<t_update>(DEVTOOLS_RELATIVE_ADDRESS(0x005a7150 - 0x00400000));
+
 
 
 	//These are methods in DEBUG_TEXT rather than DebugText

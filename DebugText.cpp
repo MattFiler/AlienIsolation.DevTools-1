@@ -28,6 +28,13 @@ int** __cdecl DebugText::h_create(int** param_1, int** param_2)
 	return ptr;
 }
 
+int __fastcall DebugText::h_update(void* _this, void* _EDX, void* param_2, int param_3)
+{
+	int val = update(_this, param_2, param_3);
+	std::cout << "DebugText update = " + val;
+	return val;
+}
+
 __declspec(noinline)
 int __fastcall DebugText::h_on_start(void* _this, void* _EDX, int* param_1)
 {
