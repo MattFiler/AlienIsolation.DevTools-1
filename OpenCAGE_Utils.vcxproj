@@ -74,7 +74,6 @@
     <ClCompile Include="libs\detours\src\disolx86.cpp" />
     <ClCompile Include="libs\detours\src\image.cpp" />
     <ClCompile Include="libs\detours\src\modules.cpp" />
-    <ClCompile Include="UI_LAYERMANAGER.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cUI.h" />

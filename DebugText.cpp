@@ -22,14 +22,6 @@ int __fastcall DebugText::h_get_alignment(void* _this, void* _EDX, int* param_1,
 }
 
 __declspec(noinline)
-int __fastcall DebugText::h_create(void* _this, void* _EDX, int* param_1, int* param_2)
-{
-	std::cout << "DebugText create " << param_1 << "\n";
-	//this crashes :(
-	return create(_this, param_1, param_2);
-}
-
-__declspec(noinline)
 int __fastcall DebugText::h_on_start(void* _this, void* _EDX, int* param_1)
 {
 	std::cout << "DebugText on_start\n";
