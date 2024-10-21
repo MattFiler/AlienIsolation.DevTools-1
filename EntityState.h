@@ -1,5 +1,7 @@
 #pragma once
 
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
 #include <iostream>
 #include "DevTools.h"
 #include "Datatypes.h"
@@ -7,7 +9,7 @@
 
 namespace EntityState
 {
-    enum EntityStateID {
+    enum class EntityStateID : std::uint32_t {
         NO_STATE = 0x0,
         ACTIVATE = 0x1,
         SPAWN = 0x2,
@@ -33,42 +35,27 @@ namespace EntityState
         INVISIBLE = 0x200000,
         FROZEN = 0x400000
     };
+    DEFINE_ENUM_FLAG_OPERATORS(EntityStateID)
 
-    std::string entityStateIDToString(EntityStateID state) {
-        switch (state) {
-        case NO_STATE: return "NO_STATE";
-        case ACTIVATE: return "ACTIVATE";
-        case SPAWN: return "SPAWN";
-        case START: return "START";
-        case PAUSE: return "PAUSE";
-        case ATTACH: return "ATTACH";
-        case UNKNOWN_1: return "UNKNOWN_1";
-        case UNKNOWN_2: return "UNKNOWN_2";
-        case ENABLE: return "ENABLE";
-        case SIMULATE: return "SIMULATE";
-        case LOCK: return "LOCK";
-        case SHOW: return "SHOW";
-        case SUSPEND: return "SUSPEND";
-        case PROXY_ENABLE: return "PROXY_ENABLE";
-        case FLOATING: return "FLOATING";
-        case LIGHT_SWITCH_ON: return "LIGHT_SWITCH_ON";
-        case INSTALL_PROXY: return "INSTALL_PROXY";
-        case UNKNOWN_3: return "UNKNOWN_3";
-        case UNKNOWN_4: return "UNKNOWN_4";
-        case UNKNOWN_5: return "UNKNOWN_5";
-        case SUSPENDED: return "SUSPENDED";
-        case GHOSTED: return "GHOSTED";
-        case INVISIBLE: return "INVISIBLE";
-        case FROZEN: return "FROZEN";
-        default: return "UNKNOWN_STATE";
-        }
-    }
+    struct Data {
+        EntityStateID state;
+    };
 
-	typedef void(__thiscall* t_state_change)(void* _this, int* param_1, int param_2, unsigned int param_3, bool param_4);
+    std::string entityStateIDToString(EntityStateID state);
+    std::string DumpStatesToString(EntityStateID state);
+
+	typedef void(__thiscall* t_state_change)(EntityState::Data* _this, int* param_1, int param_2, EntityStateID state, bool shouldAddState);
 	inline auto state_change = reinterpret_cast<t_state_change>(DEVTOOLS_RELATIVE_ADDRESS(0x00937670 - 0x00400000));
-	void  __fastcall h_state_change(void* _this, void* _EDX, int* param_1, int param_2, unsigned int param_3, bool param_4)
-	{
-		state_change(_this, param_1, param_2, param_3, param_4);
-		//std::cout << "state_change " << param_1 << " " << param_2 << " " << entityStateIDToString((EntityStateID)param_3) << " " << param_4 << "" << "\n";
-	}
+    void __fastcall h_state_change(EntityState::Data* _this, void* _EDX, int* param_1, int param_2, EntityStateID state, bool shouldAddState);
 }
+
+struct EntityInfo
+{
+    void** _vfptr;
+    EntityState::Data entityState;
+    DataTypes::ShortGuid guid;
+    EntityInfo* parent;
+
+    DataTypes::ShortGuid unk1;
+    DataTypes::ShortGuid unk2;
+};

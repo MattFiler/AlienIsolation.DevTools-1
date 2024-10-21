@@ -65,6 +65,7 @@
     <ClCompile Include="DevTools.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="EntityInterface.cpp" />
+    <ClCompile Include="EntityState.cpp" />
     <ClCompile Include="GameFlow.cpp" />
     <ClCompile Include="GAME_LEVEL_MANAGER.cpp" />
     <ClCompile Include="libs\detours\src\creatwth.cpp" />
@@ -85,6 +86,7 @@
     <ClInclude Include="DevTools.h" />
     <ClInclude Include="EntityInterface.h" />
     <ClInclude Include="EntityManager.h" />
+    <ClInclude Include="EntityState.h" />
     <ClInclude Include="GameFlow.h" />
     <ClInclude Include="GAME_LEVEL_MANAGER.h" />
     <ClInclude Include="libs\detours\src\detours.h" />

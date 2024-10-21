@@ -1,7 +1,7 @@
 #pragma once
 
 #include "DevTools.h"
-#include "Datatypes.h"
+#include "EntityState.h"
 
 namespace DebugText
 {
@@ -13,8 +13,8 @@ namespace DebugText
 	typedef int(__thiscall* t_get_alignment)(void* _this, int* param_1, int* param_2);
 	inline auto get_alignment = reinterpret_cast<t_get_alignment>(DEVTOOLS_RELATIVE_ADDRESS(0x008eae70 - 0x00400000));
 
-	void __cdecl h_create(DataTypes::EntityInfo* param_1, int** param_2);
-	typedef void(__cdecl* t_create)(DataTypes::EntityInfo* param_1, int** param_2);
+	void __cdecl h_create(EntityInfo* param_1, int** param_2);
+	typedef void(__cdecl* t_create)(EntityInfo* param_1, int** param_2);
 	inline auto create = reinterpret_cast<t_create>(DEVTOOLS_RELATIVE_ADDRESS(0x005c18b0 - 0x00400000));
 
 	int __fastcall h_update(void* _this, void* _EDX, void* param_2, int param_3);

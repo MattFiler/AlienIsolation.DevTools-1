@@ -21,11 +21,13 @@ int __fastcall DebugText::h_get_alignment(void* _this, void* _EDX, int* param_1,
 	return get_alignment(_this, param_1, param_2);
 }
 
-void __cdecl DebugText::h_create(DataTypes::EntityInfo* param_1, int** param_2)
+void __cdecl DebugText::h_create(EntityInfo* param_1, int** param_2)
 {
 	create(param_1, param_2);
-	std::cout << "DebugText create = " << param_1->val1 << " " << param_1->val2 << "\n";
-	
+	//std::cout << "DebugText create = " << param_1->val1 << " " << param_1->val2 << "\n";
+	std::cout << "DebugText create = " << EntityState::DumpStatesToString(param_1->entityState.state) << " " << param_1->unk1 << " " << param_1->unk2 << "\n";
+	// Remove states
+	param_1->entityState.state &= ~(EntityState::EntityStateID::PAUSE, EntityState::EntityStateID::UNKNOWN_2, EntityState::EntityStateID::LOCK);
 	//int v;
 	//std::cin >> v;
 }

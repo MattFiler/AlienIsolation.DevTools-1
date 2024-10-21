@@ -14,8 +14,17 @@ int __fastcall DebugTextStacking::h_on_custom_method(void* _this, void* _EDX, in
 	return on_custom_method(_this, param_1, param_2, param_3, param_4);
 }
 
-void __cdecl DebugTextStacking::h_create(DataTypes::EntityInfo* param_1, int** param_2)
+void __cdecl DebugTextStacking::h_create(EntityInfo* param_1, int** param_2)
 {
 	create(param_1, param_2);
-	std::cout << "DebugTextStacking create = " << param_1->val1 << " " << param_1->val2 << "\n";
+	std::cout << "DebugTextStacking create = " << EntityState::DumpStatesToString(param_1->entityState.state) << " " << param_1->unk1 << " " << param_1->unk2 << "\n";
+	
+	/*EntityInfo* entity = param_1;
+	if (param_1->parent != nullptr) {
+		entity = param_1->parent;
+		std::cout << "[P]DebugTextStacking create = " << EntityState::entityStateIDToString(entity->entityState.state) << "\n";
+	}
+	else {
+		std::cout << "[C]DebugTextStacking create = " << EntityState::entityStateIDToString(entity->entityState.state) << "\n";
+	}*/
 }
